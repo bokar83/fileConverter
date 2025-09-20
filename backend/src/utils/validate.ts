@@ -5,19 +5,25 @@ export interface ConversionPair {
   output: string;
 }
 
+const DOCUMENT_FORMATS = ['docx', 'xlsx', 'pptx', 'txt'] as const;
+const IMAGE_FORMATS = ['jpeg', 'jpg', 'png', 'webp', 'tiff', 'gif', 'bmp'] as const;
+const PDF_FORMATS = ['pdf'] as const;
+const VIDEO_FORMATS = ['mp4', 'mov', 'avi', 'mkv', 'webm'] as const;
+
 export const SUPPORTED_FORMATS = {
-  documents: ['docx', 'xlsx', 'pptx', 'txt'],
-  images: ['jpeg', 'jpg', 'png', 'webp', 'tiff', 'gif', 'bmp'],
-  pdf: ['pdf']
+  documents: DOCUMENT_FORMATS,
+  images: IMAGE_FORMATS,
+  pdf: PDF_FORMATS,
+  videos: VIDEO_FORMATS
 } as const;
 
-export const CONVERSION_PAIRS: ConversionPair[] = [
+const BASE_CONVERSION_PAIRS: ConversionPair[] = [
   // Document to PDF
   { input: 'docx', output: 'pdf' },
   { input: 'xlsx', output: 'pdf' },
   { input: 'pptx', output: 'pdf' },
   { input: 'txt', output: 'pdf' },
-  
+
   // Image to Image
   { input: 'jpeg', output: 'png' },
   { input: 'jpg', output: 'png' },
@@ -33,11 +39,11 @@ export const CONVERSION_PAIRS: ConversionPair[] = [
   { input: 'bmp', output: 'png' },
   { input: 'gif', output: 'jpeg' },
   { input: 'bmp', output: 'jpeg' },
-  
+
   // PDF to Image
   { input: 'pdf', output: 'png' },
   { input: 'pdf', output: 'jpeg' },
-  
+
   // Image to PDF
   { input: 'jpeg', output: 'pdf' },
   { input: 'jpg', output: 'pdf' },
@@ -46,6 +52,17 @@ export const CONVERSION_PAIRS: ConversionPair[] = [
   { input: 'tiff', output: 'pdf' },
   { input: 'gif', output: 'pdf' },
   { input: 'bmp', output: 'pdf' }
+];
+
+const VIDEO_CONVERSION_PAIRS: ConversionPair[] = VIDEO_FORMATS.flatMap(input =>
+  VIDEO_FORMATS
+    .filter(output => output !== input)
+    .map(output => ({ input, output }))
+);
+
+export const CONVERSION_PAIRS: ConversionPair[] = [
+  ...BASE_CONVERSION_PAIRS,
+  ...VIDEO_CONVERSION_PAIRS
 ];
 
 export const MIME_TYPES = {
@@ -59,11 +76,23 @@ export const MIME_TYPES = {
   'image/webp': 'webp',
   'image/tiff': 'tiff',
   'image/gif': 'gif',
-  'image/bmp': 'bmp'
+  'image/bmp': 'bmp',
+  'video/mp4': 'mp4',
+  'video/quicktime': 'mov',
+  'video/x-msvideo': 'avi',
+  'video/x-matroska': 'mkv',
+  'video/webm': 'webm'
 } as const;
 
 export function getFileExtension(filename: string): string {
-  return filename.toLowerCase().split('.').pop() || '';
+  const normalized = filename.toLowerCase();
+  const lastDotIndex = normalized.lastIndexOf('.');
+
+  if (lastDotIndex === -1 || lastDotIndex === normalized.length - 1) {
+    return '';
+  }
+
+  return normalized.slice(lastDotIndex + 1);
 }
 
 export function getMimeType(filename: string): string {
@@ -80,7 +109,12 @@ export function getMimeType(filename: string): string {
     'webp': 'image/webp',
     'tiff': 'image/tiff',
     'gif': 'image/gif',
-    'bmp': 'image/bmp'
+    'bmp': 'image/bmp',
+    'mp4': 'video/mp4',
+    'mov': 'video/quicktime',
+    'avi': 'video/x-msvideo',
+    'mkv': 'video/x-matroska',
+    'webm': 'video/webm'
   };
   return mimeMap[ext] || 'application/octet-stream';
 }
@@ -109,10 +143,11 @@ export function validateFileType(filename: string, mimeType: string): { valid: b
     return { valid: false, extension, error: `MIME type mismatch. Expected ${expectedMimeType}, got ${mimeType}` };
   }
   
-  const allSupportedExtensions = [
+  const allSupportedExtensions: string[] = [
     ...SUPPORTED_FORMATS.documents,
     ...SUPPORTED_FORMATS.images,
-    ...SUPPORTED_FORMATS.pdf
+    ...SUPPORTED_FORMATS.pdf,
+    ...SUPPORTED_FORMATS.videos
   ];
   
   if (!allSupportedExtensions.includes(extension)) {

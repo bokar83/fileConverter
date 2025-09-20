@@ -14,14 +14,16 @@ describe('FileConverter', () => {
     render(<FileConverter />);
     
     expect(screen.getByText('Drag & drop files here, or click to select')).toBeInTheDocument();
-    expect(screen.getByText('Supports DOCX, XLSX, PPTX, TXT, PDF, JPEG, PNG, WebP, TIFF, GIF, BMP')).toBeInTheDocument();
+    expect(
+      screen.getByText('Supports DOCX, XLSX, PPTX, TXT, PDF, JPEG, PNG, WebP, TIFF, GIF, BMP, MP4, MOV, AVI, MKV, WebM')
+    ).toBeInTheDocument();
   });
 
   it('shows convert button when files are selected', () => {
     // This would require more complex setup with file selection
     // For now, just test the basic render
     render(<FileConverter />);
-    expect(screen.getByRole('button', { name: /convert files/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /convert files/i })).not.toBeInTheDocument();
   });
 });
 

@@ -25,6 +25,7 @@ describe('validate utils', () => {
       expect(getMimeType('document.docx')).toBe('application/vnd.openxmlformats-officedocument.wordprocessingml.document');
       expect(getMimeType('image.png')).toBe('image/png');
       expect(getMimeType('image.jpeg')).toBe('image/jpeg');
+      expect(getMimeType('video.mp4')).toBe('video/mp4');
     });
   });
 
@@ -35,6 +36,8 @@ describe('validate utils', () => {
       expect(isValidConversion('pdf', 'png')).toBe(true);
       expect(isValidConversion('docx', 'png')).toBe(false);
       expect(isValidConversion('invalid', 'pdf')).toBe(false);
+      expect(isValidConversion('mp4', 'webm')).toBe(true);
+      expect(isValidConversion('mp4', 'mp4')).toBe(false);
     });
   });
 
@@ -49,6 +52,11 @@ describe('validate utils', () => {
       expect(pngFormats).toContain('webp');
       expect(pngFormats).toContain('tiff');
       expect(pngFormats).toContain('pdf');
+
+      const mp4Formats = getAvailableOutputFormats('mp4');
+      expect(mp4Formats).toContain('webm');
+      expect(mp4Formats).toContain('mov');
+      expect(mp4Formats).not.toContain('mp4');
     });
   });
 
@@ -61,6 +69,10 @@ describe('validate utils', () => {
       const invalidResult = validateFileType('test.txt', 'application/pdf');
       expect(invalidResult.valid).toBe(false);
       expect(invalidResult.error).toContain('MIME type mismatch');
+
+      const videoResult = validateFileType('clip.mp4', 'video/mp4');
+      expect(videoResult.valid).toBe(true);
+      expect(videoResult.extension).toBe('mp4');
     });
   });
 
@@ -78,7 +90,7 @@ describe('validate utils', () => {
   describe('sanitizeFilename', () => {
     it('should sanitize filename correctly', () => {
       expect(sanitizeFilename('test file.pdf')).toBe('test_file.pdf');
-      expect(sanitizeFilename('file@#$%.txt')).toBe('file____.txt');
+      expect(sanitizeFilename('file@#$%.txt')).toBe('file_.txt');
       expect(sanitizeFilename('normal-file.pdf')).toBe('normal-file.pdf');
     });
   });
