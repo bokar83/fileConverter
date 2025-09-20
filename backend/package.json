@@ -1,7 +1,7 @@
 {
-  "name": "snapconvert-backend",
+  "name": "file-converter-backend",
   "version": "1.0.0",
-  "description": "Backend API for SnapConvert file converter",
+  "description": "Backend API for File Converter by Catalyst Works",
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",

@@ -24,7 +24,7 @@ export const FormatSelector: React.FC<FormatSelectorProps> = ({
   if (availableFormats.length === 0) {
     return (
       <div className="text-center py-4">
-        <p className="text-gray-500">No common conversion formats available for selected files</p>
+        <p className="text-primary-500">No common conversion formats available for selected files</p>
       </div>
     );
   }
@@ -37,8 +37,8 @@ export const FormatSelector: React.FC<FormatSelectorProps> = ({
           onClick={() => onFormatChange(format)}
           className={`relative p-4 border-2 rounded-lg text-center transition-all ${
             selectedFormat === format
-              ? 'border-primary-500 bg-primary-50 text-primary-700'
-              : 'border-gray-200 hover:border-gray-300 text-gray-700'
+              ? 'border-primary-500 bg-primary-100 text-primary-700'
+              : 'border-primary-200 hover:border-primary-300 text-primary-700'
           }`}
         >
           {selectedFormat === format && (
@@ -49,7 +49,7 @@ export const FormatSelector: React.FC<FormatSelectorProps> = ({
           <div className="font-medium">
             {formatLabels[format] || format.toUpperCase()}
           </div>
-          <div className="text-xs text-gray-500 mt-1">
+          <div className="text-xs text-primary-500 mt-1">
             .{format}
           </div>
         </button>

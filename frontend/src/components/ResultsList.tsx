@@ -33,12 +33,12 @@ export const ResultsList: React.FC<ResultsListProps> = ({ results, onClear }) =>
   return (
     <div className="card">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900">
+        <h3 className="text-lg font-semibold text-primary-900">
           Conversion Results ({successfulResults.length} successful, {failedResults.length} failed)
         </h3>
         <button
           onClick={onClear}
-          className="text-gray-500 hover:text-gray-700 transition-colors"
+          className="text-primary-500 hover:text-primary-700 transition-colors"
         >
           <Trash2 className="w-5 h-5" />
         </button>
@@ -54,11 +54,11 @@ export const ResultsList: React.FC<ResultsListProps> = ({ results, onClear }) =>
             <div className="flex items-center space-x-3">
               <CheckCircle className="w-5 h-5 text-green-500" />
               <div>
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium text-primary-900">
                   {result.originalName} → {result.convertedName}
                 </p>
                 {result.size && (
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-primary-500">
                     {formatFileSize(result.size)}
                   </p>
                 )}
@@ -83,7 +83,7 @@ export const ResultsList: React.FC<ResultsListProps> = ({ results, onClear }) =>
             <div className="flex items-center space-x-3">
               <AlertCircle className="w-5 h-5 text-red-500" />
               <div>
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium text-primary-900">
                   {result.originalName}
                 </p>
                 <p className="text-xs text-red-600">

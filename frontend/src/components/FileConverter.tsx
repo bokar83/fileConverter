@@ -138,20 +138,20 @@ export const FileConverter: React.FC = () => {
           {...getRootProps()}
           className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
             isDragActive 
-              ? 'border-primary-500 bg-primary-50' 
-              : 'border-gray-300 hover:border-gray-400'
+              ? 'border-primary-500 bg-primary-100' 
+              : 'border-primary-300 hover:border-primary-400'
           }`}
         >
           <input {...getInputProps()} />
-          <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <Upload className="w-12 h-12 text-primary-400 mx-auto mb-4" />
           {isDragActive ? (
             <p className="text-lg text-primary-600">Drop the files here...</p>
           ) : (
             <div>
-              <p className="text-lg text-gray-600 mb-2">
+              <p className="text-lg text-primary-700 mb-2">
                 Drag & drop files here, or click to select
               </p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-primary-500">
                 Supports DOCX, XLSX, PPTX, TXT, PDF, JPEG, PNG, WebP, TIFF, GIF, BMP
               </p>
             </div>
@@ -170,7 +170,7 @@ export const FileConverter: React.FC = () => {
       {/* Format Selection */}
       {files.length > 0 && (
         <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Select Output Format</h3>
+          <h3 className="text-lg font-semibold text-primary-900 mb-4">Select Output Format</h3>
           <FormatSelector
             availableFormats={getCommonFormats()}
             selectedFormat={targetFormat}

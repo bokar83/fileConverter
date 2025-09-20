@@ -10,9 +10,9 @@ interface FileListProps {
 export const FileList: React.FC<FileListProps> = ({ files, onRemove }) => {
   const getFileIcon = (file: File) => {
     if (file.type.startsWith('image/')) {
-      return <Image className="w-5 h-5 text-blue-500" />;
+      return <Image className="w-5 h-5 text-accent-500" />;
     }
-    return <FileText className="w-5 h-5 text-gray-500" />;
+    return <FileText className="w-5 h-5 text-primary-500" />;
   };
 
   const formatFileSize = (bytes: number): string => {
@@ -24,30 +24,30 @@ export const FileList: React.FC<FileListProps> = ({ files, onRemove }) => {
   };
 
   return (
-    <div className="card">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-        Selected Files ({files.length})
-      </h3>
-      <div className="space-y-2">
-        {files.map((fileWithPreview) => (
-          <div
-            key={fileWithPreview.id}
-            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-          >
+      <div className="card">
+        <h3 className="text-lg font-semibold text-primary-900 mb-4">
+          Selected Files ({files.length})
+        </h3>
+        <div className="space-y-2">
+          {files.map((fileWithPreview) => (
+            <div
+              key={fileWithPreview.id}
+              className="flex items-center justify-between p-3 bg-primary-50 rounded-lg"
+            >
             <div className="flex items-center space-x-3">
               {getFileIcon(fileWithPreview.file)}
               <div>
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium text-primary-900">
                   {fileWithPreview.file.name}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-primary-500">
                   {formatFileSize(fileWithPreview.file.size)}
                 </p>
               </div>
             </div>
             <button
               onClick={() => onRemove(fileWithPreview.id)}
-              className="text-gray-400 hover:text-red-500 transition-colors"
+              className="text-primary-400 hover:text-red-500 transition-colors"
             >
               <X className="w-4 h-4" />
             </button>

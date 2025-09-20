@@ -1,6 +1,8 @@
-# SnapConvert - File Converter MVP
+# File Converter
 
 A simple, fast web application to convert common documents and images with drag-and-drop functionality.
+
+**© 2025 Catalyst Works**
 
 ## Features
 
@@ -241,15 +243,7 @@ cd frontend && npm test
 
 ## License
 
-MIT License - see LICENSE file for details.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+© 2025 Catalyst Works. All rights reserved.
 
 ## Support
 

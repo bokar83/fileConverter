@@ -72,10 +72,11 @@ cleanupService.start();
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 SnapConvert backend running on port ${PORT}`);
+  console.log(`🚀 File Converter backend running on port ${PORT}`);
   console.log(`📁 Temp directory: ${TMP_DIR}`);
   console.log(`📏 Max file size: ${MAX_FILE_SIZE_MB}MB`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🏢 Catalyst Works © 2025`);
 });
 
 // Graceful shutdown

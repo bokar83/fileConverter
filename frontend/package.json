@@ -1,7 +1,7 @@
 {
-  "name": "snapconvert-frontend",
+  "name": "file-converter-frontend",
   "version": "1.0.0",
-  "description": "Frontend for SnapConvert file converter",
+  "description": "Frontend for File Converter by Catalyst Works",
   "type": "module",
   "scripts": {
     "dev": "vite",

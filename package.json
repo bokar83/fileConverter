@@ -1,7 +1,7 @@
 {
-  "name": "snapconvert",
+  "name": "file-converter",
   "version": "1.0.0",
-  "description": "A simple, fast web app to convert common documents and images",
+  "description": "A simple, fast web app to convert common documents and images by Catalyst Works",
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
