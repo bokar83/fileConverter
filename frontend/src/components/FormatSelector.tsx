@@ -18,7 +18,12 @@ export const FormatSelector: React.FC<FormatSelectorProps> = ({
     'jpeg': 'JPEG',
     'jpg': 'JPEG',
     'webp': 'WebP',
-    'tiff': 'TIFF'
+    'tiff': 'TIFF',
+    'mp4': 'MP4',
+    'mov': 'MOV',
+    'avi': 'AVI',
+    'mkv': 'MKV',
+    'webm': 'WebM'
   };
 
   if (availableFormats.length === 0) {

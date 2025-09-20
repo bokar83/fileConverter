@@ -12,6 +12,7 @@ import { convertImageToImage } from '../services/convert/imageToImage';
 import { convertImagesToPdf, convertSingleImageToPdf } from '../services/convert/imageToPdf';
 import { convertDocToPdf } from '../services/convert/docToPdf';
 import { convertPdfToImages } from '../services/convert/pdfToImage';
+import { convertVideoToFormat } from '../services/convert/videoToVideo';
 import { ensureDirectoryExists, generateUniqueFilename } from '../utils/fs';
 
 const router = express.Router();
@@ -150,10 +151,17 @@ async function convertFile(
     // Image to PDF
     outputPath = await convertSingleImageToPdf(file.buffer, outputDir);
     mimeType = 'application/pdf';
-  } else if (['jpeg', 'jpg', 'png', 'webp', 'tiff', 'gif', 'bmp'].includes(inputExt) && 
+  } else if (['jpeg', 'jpg', 'png', 'webp', 'tiff', 'gif', 'bmp'].includes(inputExt) &&
              ['jpeg', 'jpg', 'png', 'webp', 'tiff'].includes(targetFormat)) {
     // Image to Image
     outputPath = await convertImageToImage(file.buffer, inputExt, targetFormat, outputDir);
+    mimeType = getMimeTypeForFormat(targetFormat);
+  } else if (['mp4', 'mov', 'avi', 'mkv', 'webm'].includes(inputExt) &&
+             ['mp4', 'mov', 'avi', 'mkv', 'webm'].includes(targetFormat)) {
+    if (inputExt === targetFormat) {
+      throw new Error('Input and target video formats must differ');
+    }
+    outputPath = await convertVideoToFormat(file.buffer, inputExt, targetFormat, outputDir);
     mimeType = getMimeTypeForFormat(targetFormat);
   } else {
     throw new Error(`Unsupported conversion: ${inputExt} to ${targetFormat}`);
@@ -177,7 +185,12 @@ function getMimeTypeForFormat(format: string): string {
     'jpg': 'image/jpeg',
     'png': 'image/png',
     'webp': 'image/webp',
-    'tiff': 'image/tiff'
+    'tiff': 'image/tiff',
+    'mp4': 'video/mp4',
+    'mov': 'video/quicktime',
+    'avi': 'video/x-msvideo',
+    'mkv': 'video/x-matroska',
+    'webm': 'video/webm'
   };
   return mimeMap[format] || 'application/octet-stream';
 }

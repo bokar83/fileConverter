@@ -51,7 +51,12 @@ export const FileConverter: React.FC = () => {
       'image/webp': ['.webp'],
       'image/tiff': ['.tiff'],
       'image/gif': ['.gif'],
-      'image/bmp': ['.bmp']
+      'image/bmp': ['.bmp'],
+      'video/mp4': ['.mp4'],
+      'video/quicktime': ['.mov'],
+      'video/x-msvideo': ['.avi'],
+      'video/x-matroska': ['.mkv'],
+      'video/webm': ['.webm']
     },
     multiple: true
   });
@@ -98,6 +103,7 @@ export const FileConverter: React.FC = () => {
   };
 
   const getAvailableFormats = (inputFormat: string): string[] => {
+    const videoFormats = ['mp4', 'mov', 'avi', 'mkv', 'webm'];
     const formatMap: Record<string, string[]> = {
       'docx': ['pdf'],
       'xlsx': ['pdf'],
@@ -112,6 +118,9 @@ export const FileConverter: React.FC = () => {
       'gif': ['png', 'jpeg', 'pdf'],
       'bmp': ['png', 'jpeg', 'pdf']
     };
+    if (videoFormats.includes(inputFormat)) {
+      return videoFormats.filter(format => format !== inputFormat);
+    }
     return formatMap[inputFormat] || [];
   };
 
@@ -152,7 +161,7 @@ export const FileConverter: React.FC = () => {
                 Drag & drop files here, or click to select
               </p>
               <p className="text-sm text-primary-500">
-                Supports DOCX, XLSX, PPTX, TXT, PDF, JPEG, PNG, WebP, TIFF, GIF, BMP
+                Supports DOCX, XLSX, PPTX, TXT, PDF, JPEG, PNG, WebP, TIFF, GIF, BMP, MP4, MOV, AVI, MKV, WebM
               </p>
             </div>
           )}
