@@ -1,0 +1,15 @@
+This is a sample text file for testing SnapConvert.
+
+It contains multiple lines of text to demonstrate the conversion from TXT to PDF.
+
+Features to test:
+- Text formatting preservation
+- Multi-line content
+- Special characters: !@#$%^&*()
+- Numbers: 1234567890
+- Mixed case: Hello World
+
+This file should convert cleanly to PDF format.
+
+
+

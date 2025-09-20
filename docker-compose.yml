@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  snapconvert:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - MAX_FILE_SIZE_MB=50
+      - TMP_DIR=/app/tmp
+      - CLEANUP_MAX_AGE_MINUTES=30
+    volumes:
+      - snapconvert_tmp:/app/tmp
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  snapconvert_tmp:
+
+
+
