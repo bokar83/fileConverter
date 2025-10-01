@@ -1,5 +1,4 @@
 import React from 'react';
-import { Check } from 'lucide-react';
 
 interface FormatSelectorProps {
   availableFormats: string[];
@@ -13,12 +12,12 @@ export const FormatSelector: React.FC<FormatSelectorProps> = ({
   onFormatChange
 }) => {
   const formatLabels: Record<string, string> = {
-    'pdf': 'PDF',
-    'png': 'PNG',
-    'jpeg': 'JPEG',
-    'jpg': 'JPEG',
-    'webp': 'WebP',
-    'tiff': 'TIFF'
+    pdf: 'PDF',
+    png: 'PNG',
+    jpeg: 'JPEG',
+    jpg: 'JPEG',
+    webp: 'WebP',
+    tiff: 'TIFF'
   };
 
   if (availableFormats.length === 0) {
@@ -30,30 +29,27 @@ export const FormatSelector: React.FC<FormatSelectorProps> = ({
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-      {availableFormats.map((format) => (
-        <button
-          key={format}
-          onClick={() => onFormatChange(format)}
-          className={`relative p-4 border-2 rounded-lg text-center transition-all ${
-            selectedFormat === format
-              ? 'border-primary-500 bg-primary-100 text-primary-700'
-              : 'border-primary-200 hover:border-primary-300 text-primary-700'
-          }`}
+    <div className="space-y-2">
+      <label className="block text-sm font-medium text-primary-700" htmlFor="target-format">
+        Choose output format
+      </label>
+      <div className="relative">
+        <select
+          id="target-format"
+          value={selectedFormat || availableFormats[0]}
+          onChange={(event) => onFormatChange(event.target.value)}
+          className="w-full appearance-none rounded-lg border-2 border-primary-200 bg-white px-4 py-3 text-primary-700 focus:border-primary-500 focus:outline-none"
         >
-          {selectedFormat === format && (
-            <div className="absolute top-2 right-2">
-              <Check className="w-4 h-4 text-primary-600" />
-            </div>
-          )}
-          <div className="font-medium">
-            {formatLabels[format] || format.toUpperCase()}
-          </div>
-          <div className="text-xs text-primary-500 mt-1">
-            .{format}
-          </div>
-        </button>
-      ))}
+          {availableFormats.map((format) => (
+            <option key={format} value={format}>
+              {formatLabels[format] || format.toUpperCase()}
+            </option>
+          ))}
+        </select>
+        <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-primary-400">
+          ▾
+        </span>
+      </div>
     </div>
   );
 };

@@ -21,7 +21,8 @@ describe('FileConverter', () => {
     // This would require more complex setup with file selection
     // For now, just test the basic render
     render(<FileConverter />);
-    expect(screen.getByRole('button', { name: /convert files/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /convert now/i })).toBeInTheDocument();
+    expect(screen.getByText('Fast & secure conversion in seconds.')).toBeInTheDocument();
   });
 });
 

@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, FileText, Download, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
+import { Upload, FileText, AlertCircle, Loader2 } from 'lucide-react';
 import { ConversionResult, FileWithPreview } from '../types';
 import { convertFiles } from '../services/api';
 import { FileList } from './FileList';
@@ -32,7 +32,10 @@ export const FileConverter: React.FC = () => {
       if (extension) {
         const availableFormats = getAvailableFormats(extension);
         if (availableFormats.length > 0) {
-          setTargetFormat(availableFormats[0]);
+          const preferredFormat = availableFormats.includes('pdf')
+            ? 'pdf'
+            : availableFormats[0];
+          setTargetFormat(preferredFormat);
         }
       }
     }
@@ -115,30 +118,49 @@ export const FileConverter: React.FC = () => {
     return formatMap[inputFormat] || [];
   };
 
-  const getCommonFormats = (): string[] => {
+  const commonFormats = useMemo(() => {
     if (files.length === 0) return [];
-    
+
     const allFormats = files.map(f => {
       const ext = f.file.name.split('.').pop()?.toLowerCase();
       return ext ? getAvailableFormats(ext) : [];
     });
-    
-    // Find intersection of all available formats
-    return allFormats.reduce((acc, formats) => 
-      acc.filter(format => formats.includes(format)), 
+
+    return allFormats.reduce((acc, formats) =>
+      acc.filter(format => formats.includes(format)),
       allFormats[0] || []
     );
-  };
+  }, [files]);
+
+  useEffect(() => {
+    if (files.length === 0) {
+      setTargetFormat('');
+      return;
+    }
+
+    if (commonFormats.length === 0) {
+      setTargetFormat('');
+      return;
+    }
+
+    const preferredFormat = commonFormats.includes('pdf') ? 'pdf' : commonFormats[0];
+
+    setTargetFormat(prev =>
+      prev && commonFormats.includes(prev) ? prev : preferredFormat
+    );
+  }, [files, commonFormats]);
+
+  const canConvert = files.length > 0 && !!targetFormat && !isConverting;
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Upload Area */}
-      <div className="card">
+      <div className="card space-y-6">
         <div
           {...getRootProps()}
           className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-            isDragActive 
-              ? 'border-primary-500 bg-primary-100' 
+            isDragActive
+              ? 'border-primary-500 bg-primary-100'
               : 'border-primary-300 hover:border-primary-400'
           }`}
         >
@@ -157,12 +179,34 @@ export const FileConverter: React.FC = () => {
             </div>
           )}
         </div>
+        <div className="text-center space-y-3">
+          <button
+            onClick={handleConvert}
+            disabled={!canConvert}
+            className={`btn-primary w-full md:w-auto text-lg px-10 py-4 ${
+              canConvert ? '' : 'opacity-70 cursor-not-allowed'
+            }`}
+          >
+            {isConverting ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 inline-block align-middle animate-spin" />
+                <span className="align-middle">Converting...</span>
+              </>
+            ) : (
+              <>
+                <FileText className="w-5 h-5 mr-2 inline-block align-middle" />
+                <span className="align-middle">Convert Now</span>
+              </>
+            )}
+          </button>
+          <p className="text-sm text-primary-500">Fast &amp; secure conversion in seconds.</p>
+        </div>
       </div>
 
       {/* File List */}
       {files.length > 0 && (
-        <FileList 
-          files={files} 
+        <FileList
+          files={files}
           onRemove={handleRemoveFile}
         />
       )}
@@ -172,33 +216,10 @@ export const FileConverter: React.FC = () => {
         <div className="card">
           <h3 className="text-lg font-semibold text-primary-900 mb-4">Select Output Format</h3>
           <FormatSelector
-            availableFormats={getCommonFormats()}
+            availableFormats={commonFormats}
             selectedFormat={targetFormat}
             onFormatChange={setTargetFormat}
           />
-        </div>
-      )}
-
-      {/* Convert Button */}
-      {files.length > 0 && targetFormat && (
-        <div className="text-center">
-          <button
-            onClick={handleConvert}
-            disabled={isConverting}
-            className="btn-primary text-lg px-8 py-3"
-          >
-            {isConverting ? (
-              <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Converting...
-              </>
-            ) : (
-              <>
-                <FileText className="w-5 h-5 mr-2" />
-                Convert Files
-              </>
-            )}
-          </button>
         </div>
       )}
 
