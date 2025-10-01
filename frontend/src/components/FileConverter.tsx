@@ -38,7 +38,7 @@ export const FileConverter: React.FC = () => {
     }
   }, [files.length]);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
     accept: {
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
@@ -136,27 +136,37 @@ export const FileConverter: React.FC = () => {
       <div className="card">
         <div
           {...getRootProps()}
-          className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-            isDragActive 
-              ? 'border-primary-500 bg-primary-100' 
-              : 'border-primary-300 hover:border-primary-400'
+          className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors duration-200 ${
+            isDragActive
+              ? 'border-primary-500 bg-primary-100 dark:border-primary-400 dark:bg-neutral-800/70'
+              : 'border-primary-300 hover:border-primary-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:bg-neutral-900/40'
           }`}
         >
           <input {...getInputProps()} />
           <Upload className="w-12 h-12 text-primary-400 mx-auto mb-4" />
           {isDragActive ? (
-            <p className="text-lg text-primary-600">Drop the files here...</p>
+            <p className="text-lg text-primary-600 dark:text-primary-200">Drop the files here...</p>
           ) : (
             <div>
-              <p className="text-lg text-primary-700 mb-2">
+              <p className="text-lg text-primary-700 dark:text-primary-100 mb-2">
                 Drag & drop files here, or click to select
               </p>
-              <p className="text-sm text-primary-500">
+              <p className="text-sm text-primary-500 dark:text-primary-200">
                 Supports DOCX, XLSX, PPTX, TXT, PDF, JPEG, PNG, WebP, TIFF, GIF, BMP
               </p>
             </div>
           )}
         </div>
+        <p className="mt-4 text-sm text-primary-500 dark:text-primary-200">
+          🔒 Your files are never stored. Instant, private, and secure conversion.
+        </p>
+        <button
+          type="button"
+          onClick={open}
+          className="btn-primary mt-4 w-full sm:hidden"
+        >
+          Browse Files
+        </button>
       </div>
 
       {/* File List */}
@@ -170,7 +180,7 @@ export const FileConverter: React.FC = () => {
       {/* Format Selection */}
       {files.length > 0 && (
         <div className="card">
-          <h3 className="text-lg font-semibold text-primary-900 mb-4">Select Output Format</h3>
+          <h3 className="text-lg font-semibold text-primary-900 dark:text-primary-100 mb-4">Select Output Format</h3>
           <FormatSelector
             availableFormats={getCommonFormats()}
             selectedFormat={targetFormat}
@@ -180,27 +190,25 @@ export const FileConverter: React.FC = () => {
       )}
 
       {/* Convert Button */}
-      {files.length > 0 && targetFormat && (
-        <div className="text-center">
-          <button
-            onClick={handleConvert}
-            disabled={isConverting}
-            className="btn-primary text-lg px-8 py-3"
-          >
-            {isConverting ? (
-              <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Converting...
-              </>
-            ) : (
-              <>
-                <FileText className="w-5 h-5 mr-2" />
-                Convert Files
-              </>
-            )}
-          </button>
-        </div>
-      )}
+      <div className="text-center">
+        <button
+          onClick={handleConvert}
+          disabled={isConverting || files.length === 0 || !targetFormat}
+          className="btn-primary text-lg px-8 py-3 inline-flex items-center justify-center"
+        >
+          {isConverting ? (
+            <>
+              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+              Converting...
+            </>
+          ) : (
+            <>
+              <FileText className="w-5 h-5 mr-2" />
+              Convert Files
+            </>
+          )}
+        </button>
+      </div>
 
       {/* Error Message */}
       {error && (
